@@ -6,10 +6,17 @@ import cors from "cors"
 const app = express();
 
 
-app.use(cors({
-    origin: 'https://fxaeproductions.vercel.app/', // Must be your exact frontend URL
-    credentials: true
-}));
+const corsOptions = {
+  // Replace this with your EXACT frontend URL (no trailing slash)
+  origin: 'https://fxaeproductions.vercel.app', 
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
+
+app.use(cors(corsOptions));
+
 app.use(express.json());
 
 
