@@ -4,7 +4,7 @@ import startCleanupTask from "./src/services/cleanUpData.services.js";
 
 connectDB();
 
-app.listen(5000, () => {
-    console.log("Server is runing on port 5000");
-    startCleanupTask()
+const PORT = process.env.PORT || 5000; 
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });

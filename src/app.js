@@ -7,7 +7,7 @@ const app = express();
 
 
 app.use(cors({
-    origin: 'http://localhost:5173', // Must be your exact frontend URL
+    origin: 'https://fxaeproductions.vercel.app/', // Must be your exact frontend URL
     credentials: true
 }));
 app.use(express.json());
