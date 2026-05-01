@@ -2,6 +2,9 @@ import app from "./src/app.js";
 import { connectDB } from "./src/db/db.js";
 import startCleanupTask from "./src/services/cleanUpData.services.js";
 import cors from 'cors';
+import dotenv from "dotenv";
+
+dotenv.config();
 
 connectDB();
 
