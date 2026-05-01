@@ -82,6 +82,15 @@ export const login = async (req, res) => {
     }
 };
 
+export const logout = (req, res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+  });
+  res.status(200).json({ message: "Logged out successfully" });
+};
+
 export const getMe = async (req, res) => {
     try {
         // 'req.userId' comes from your verifyToken middleware
