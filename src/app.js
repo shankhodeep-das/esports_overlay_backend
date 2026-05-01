@@ -10,11 +10,9 @@ const corsOptions = {
   allowedHeaders: ['Content-Type', 'Authorization'],
 };
 // Handle preflight requests for ALL routes
-app.options('/{*path}', cors(corsOptions));
 app.use(cors(corsOptions));
 
 app.use(express.json());
-
 
 app.use("/auth",authRoutes);
 app.use("/admin",adminRoutes);
