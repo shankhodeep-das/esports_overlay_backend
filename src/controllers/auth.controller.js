@@ -78,6 +78,7 @@ export const login = async (req, res) => {
         });
 
     } catch (error) {
+        console.log("Error Type:", error.message);
         res.status(500).json({ message: "Server error" });
     }
 };
@@ -92,13 +93,23 @@ export const logout = (req, res) => {
 };
 
 export const getMe = async (req, res) => {
-    try {
-        // 'req.userId' comes from your verifyToken middleware
-        const user = await User.findById(req.userId).select('-password');
-        if (!user) return res.status(404).json({ success: false });
-
-        res.status(200).json({ success: true, user });
-    } catch (error) {
-        res.status(500).json({ success: false });
+  try {
+    // 1. Check if the middleware actually found a user ID
+    if (!req.userId) {
+      return res.status(401).json({ success: false, message: "Unauthorized: No user ID found" });
     }
+
+    // 2. Attempt to find the user
+    const user = await userModel.findById(req.userId).select('-password');
+    
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    res.status(200).json({ success: true, user });
+  } catch (error) {
+    // This logs the actual error to your VS Code terminal so you can see why it failed
+    console.error("GET_ME_ERROR:", error.message); 
+    res.status(500).json({ success: false, message: "Server error" });
+  }
 };
