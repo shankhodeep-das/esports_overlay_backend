@@ -7,7 +7,7 @@ import cors from 'cors';
 const app = express();
 
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: 'https://fxaeproductions.vercel.app',
     credentials: true
 }));
 
