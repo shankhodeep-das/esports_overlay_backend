@@ -29,7 +29,7 @@ const authorisedUserSchema = new mongoose.Schema({
     },
     role:{
         type:String,
-        enum:["ADMIN","MANAGER","EDITER","VIEWER"],
+        enum:["DEVELOPER","ADMIN","MANAGER","EDITER","VIEWER"],
         default:"VIEWER"
     },
     addedBy: {
@@ -39,6 +39,16 @@ const authorisedUserSchema = new mongoose.Schema({
     createdAt:{
         type: Date,
         default: Date.now()
+    },
+    isVerified:{
+        type: Boolean,
+        default: false
+    },
+    otp: { 
+        type: String 
+    },
+    otpExpires: { 
+        type: Date 
     }
 },{
     timestamps: true

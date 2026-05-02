@@ -1,4 +1,5 @@
 import { userModel } from '../models/authorisiedUser.model.js';
+import { sendWelcomeEmail } from "../services/email.services.js";
 import bcrypt from "bcryptjs";
 import jwt from 'jsonwebtoken'
 
@@ -30,9 +31,10 @@ export const requestAccess = async (req, res) => {
         });
 
         await newAuthorisedUser.save();
+        await sendWelcomeEmail(newAuthorisedUser.email, newAuthorisedUser.name);
 
         res.status(201).json({ 
-            message: "Request sent successfully. Please wait for admin approval." 
+            message: "Request sent successfully and please check your email. Please wait for admin approval." 
         });
 
     } catch (error) {
