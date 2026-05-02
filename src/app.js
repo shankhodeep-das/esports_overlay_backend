@@ -1,6 +1,8 @@
 import express from "express"
 import authRoutes from "./routes/auth.routes.js"
 import adminRoutes from "./routes/admin.routes.js"
+import statsRoutes from "./routes/stats.routes.js"
+import announcementRoutes from "./routes/announcement.routes.js"
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 
@@ -20,6 +22,8 @@ app.use(cookieParser());
 
 app.use("/auth",authRoutes);
 app.use("/admin",adminRoutes);
+app.use("/stats",statsRoutes);
+app.use("/message",announcementRoutes);
 
 
 export default app;
