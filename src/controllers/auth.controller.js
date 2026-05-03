@@ -76,6 +76,7 @@ export const login = async (req, res) => {
             path: '/',
         }).status(200).json({
             success: true,
+            token: token,
             user: { id: user._id, username: user.username, email: user.email }
         });
 

@@ -6,7 +6,8 @@ export const createMatch = async (req, res) => {
     try {
         const { matchTitle, mapNames, sheetId, matchCount, teamCount } = req.body;
 
-        const finalTeamCount = teamCount || 12;
+        const finalMatchCount = Number(matchCount) || 1; 
+        const finalTeamCount = Number(teamCount) || 12;
 
         if(finalTeamCount>25){
             return res.status(400).json({
@@ -23,7 +24,7 @@ export const createMatch = async (req, res) => {
         const createdMatches = [];
 
         // 3. Loop to create matches (if matchCount is 1, it runs once)
-        for (let i = 0; i < matchCount; i++) {
+        for (let i = 0; i < finalMatchCount; i++) {
             const newMatch = new Match({
                 matchTitle: matchCount > 1 ? `${matchTitle} - Game ${i + 1}` : matchTitle,
                 matchNumber: i + 1,
@@ -52,7 +53,27 @@ export const createMatch = async (req, res) => {
 
     } catch (error) {
         console.error("Match Creation Error:", error);
-        res.status(500).json({ success: false, message: "Internal Server Error" });
+        res.status(500).json({ success: false, message: error.message, errorDetails: error });
+    }
+};
+
+export const getAllUpcomingMatches = async (req, res) => {
+    try {
+        // Filter matches where status is strictly 'UPCOMING'
+        // We also sort by 'createdAt' descending so the newest series appears first
+        const matches = await Match.find({ status: 'UPCOMING' }).sort({ createdAt: -1 });
+
+        res.status(200).json({
+            success: true,
+            count: matches.length,
+            matches
+        });
+    } catch (error) {
+        console.error("Fetch Error:", error);
+        res.status(500).json({ 
+            success: false, 
+            message: "Failed to retrieve upcoming matches" 
+        });
     }
 };
 
