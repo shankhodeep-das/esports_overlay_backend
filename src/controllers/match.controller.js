@@ -94,20 +94,20 @@ export const getMatchById = async (req, res) => {
 
 export const updateTeamStats = async (req, res) => {
     try {
-        const { matchId, slotNumber, kills, isEliminated, teamName } = req.body;
+        const { matchId, slotNumber, kills, aliveCount, teamName, teamBg } = req.body;
         console.log("Data received from Sheet:", req.body);
         const numericKills = kills === '' ? 0 : Number(kills);
-        const boolEliminated = isEliminated === true || isEliminated === "true";
         const updatedMatch = await Match.findOneAndUpdate(
             { _id: matchId, "teams.slotNumber": Number(slotNumber) },
             { 
                 $set: { 
                     "teams.$.kills": numericKills,
-                    "teams.$.isEliminated": boolEliminated,
-                    "teams.$.teamName": teamName 
+                    "teams.$.aliveCount": Number(aliveCount),
+                    "teams.$.teamName": teamName,
+                    "teams.$.teamBg": teamBg
                 } 
             },
-            { new: true }
+            { new: true, runValidators: true }
         );
 
         if (!updatedMatch) {
@@ -116,6 +116,32 @@ export const updateTeamStats = async (req, res) => {
 
         res.status(200).json({ success: true, message: "Stats Updated!" });
     } catch (error) {
+        console.error("CRITICAL DB ERROR:", error.message);
         res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+export const getMatchForOverlay = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // Find the match in the database
+        const match = await Match.findById(id);
+
+        if (!match) {
+            return res.status(404).json({ 
+                success: false, 
+                message: "Match not found" 
+            });
+        }
+
+        // Send the match data back to the overlay
+        res.status(200).json(match);
+    } catch (error) {
+        console.error("Error fetching match:", error.message);
+        res.status(500).json({ 
+            success: false, 
+            message: "Server error while fetching match data" 
+        });
     }
 };

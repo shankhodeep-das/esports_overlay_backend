@@ -7,7 +7,8 @@ const teamMatchStatsSchema = new mongoose.Schema({
     kills: { type: Number, default: 0 },
     placement: { type: Number, default: 0 },
     totalPoints: { type: Number, default: 0 },
-    isEliminated: { type: Boolean, default: false }
+    aliveCount: { type: Number, default: 4, min: 0, max: 4 },
+    teamBg: { type: String, default: "" }
 });
 
 const matchSchema = new mongoose.Schema({

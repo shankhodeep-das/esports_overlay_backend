@@ -1,7 +1,7 @@
 import express from 'express';
 import { getPendingRequests, handleUserRequest } from '../controllers/admin.controller.js';
 import { verifyToken } from '../middleware/auth.middleware.js';
-import { createMatch, getMatchById, updateTeamStats, getAllUpcomingMatches } from '../controllers/match.controller.js';
+import { createMatch, getMatchById, updateTeamStats, getAllUpcomingMatches, getMatchForOverlay } from '../controllers/match.controller.js';
 
 const router = express.Router();
 
@@ -17,5 +17,6 @@ router.get('/get-all-match',verifyToken, getAllUpcomingMatches);
 
 router.get('/get-match/:id', getMatchById);
 router.post('/update-team', updateTeamStats);
+router.get('/get-match-Ui/:id', getMatchForOverlay);
 
 export default router;
