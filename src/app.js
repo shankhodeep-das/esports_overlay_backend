@@ -8,6 +8,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 
 const app = express();
+app.use(express.urlencoded({ extended: true }));
 const corsOptions = {
   origin: 'https://fxaeproductions.vercel.app',
   //origin: 'http://localhost:5173',

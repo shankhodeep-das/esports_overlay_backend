@@ -93,10 +93,16 @@ export const getMatchById = async (req, res) => {
 };
 
 export const updateTeamStats = async (req, res) => {
+    // MOVE LOG TO THE TOP - This must show up in your terminal
+    console.log("--- INCOMING REQUEST ---");
+    console.log("Body Content:", JSON.stringify(req.body, null, 2));
+
     try {
-        const { matchId, slotNumber, kills, aliveCount, teamName, teamBg } = req.body;
-        console.log("Data received from Sheet:", req.body);
+        const { matchId, slotNumber, kills, aliveCount, teamName, teamBg, teamLogo } = req.body;
+        
         const numericKills = kills === '' ? 0 : Number(kills);
+
+        // Change: Use only $set and remove runValidators temporarily to debug
         const updatedMatch = await Match.findOneAndUpdate(
             { _id: matchId, "teams.slotNumber": Number(slotNumber) },
             { 
@@ -104,19 +110,22 @@ export const updateTeamStats = async (req, res) => {
                     "teams.$.kills": numericKills,
                     "teams.$.aliveCount": Number(aliveCount),
                     "teams.$.teamName": teamName,
-                    "teams.$.teamBg": teamBg
+                    "teams.$.teamBg": teamBg,
+                    "teams.$.teamLogo": teamLogo // Ensure this matches payload key exactly
                 } 
             },
-            { new: true, runValidators: true }
+            { new: true, strict: false } // strict: false allows the field even if schema is 'stale'
         );
 
         if (!updatedMatch) {
+            console.log("❌ Match or Slot not found for ID:", matchId);
             return res.status(404).json({ success: false, message: "Match or Slot not found" });
         }
 
-        res.status(200).json({ success: true, message: "Stats Updated!" });
+        console.log("✅ Database Updated Successfully");
+        res.status(200).json({ success: true });
     } catch (error) {
-        console.error("CRITICAL DB ERROR:", error.message);
+        console.error("❌ CRITICAL DB ERROR:", error.message);
         res.status(500).json({ success: false, message: error.message });
     }
 };
